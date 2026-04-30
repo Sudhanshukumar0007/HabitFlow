@@ -23,14 +23,14 @@ const setRefreshCookie = (res, token) => {
   res.cookie('hf_refresh', token, {
     httpOnly: true,          // JS cannot read it
     secure: isProd,          // HTTPS only in production
-    sameSite: isProd ? 'strict' : 'lax',
+    sameSite: isProd ? 'none' : 'lax', // Must be 'none' for cross-domain deployment (e.g. Vercel -> Render)
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
     path: '/api/auth',       // Only sent to auth endpoints
   });
 };
 
 const clearRefreshCookie = (res) => {
-  res.clearCookie('hf_refresh', { httpOnly: true, secure: isProd, sameSite: isProd ? 'strict' : 'lax', path: '/api/auth' });
+  res.clearCookie('hf_refresh', { httpOnly: true, secure: isProd, sameSite: isProd ? 'none' : 'lax', path: '/api/auth' });
 };
 
 const buildUserPayload = (user) => ({
