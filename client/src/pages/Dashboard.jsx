@@ -185,7 +185,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {confetti && <ReactConfetti recycle={false} numberOfPieces={300} />}
       <Navbar currentMonth={currentMonth} setCurrentMonth={setCurrentMonth} />
 
@@ -253,7 +253,7 @@ export default function Dashboard() {
         {/* Notes Section */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
               <StickyNote className="w-5 h-5 text-yellow-400" />
               Notes
             </h2>
@@ -263,7 +263,7 @@ export default function Dashboard() {
           </div>
 
           {notes.length === 0 ? (
-            <div className="card text-center py-8 text-gray-600">
+            <div className="card text-center py-8 text-gray-500 dark:text-gray-600">
               <div className="text-2xl mb-2">📝</div>
               <div className="text-sm">No notes yet. Add your thoughts!</div>
             </div>
@@ -273,14 +273,14 @@ export default function Dashboard() {
                 <div key={note._id} className="card group relative hover:border-gray-700 transition-colors">
                   <button
                     onClick={() => handleDeleteNote(note._id)}
-                    className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-400 transition-all"
+                    className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 dark:text-gray-600 dark:hover:text-red-400 transition-all"
                   >
                     <X className="w-4 h-4" />
                   </button>
-                  <div className="prose prose-sm prose-invert max-w-none text-gray-300 text-sm line-clamp-4">
+                  <div className="prose prose-sm prose-invert max-w-none text-gray-700 dark:text-gray-300 text-sm line-clamp-4">
                     <ReactMarkdown>{note.content}</ReactMarkdown>
                   </div>
-                  <div className="mt-3 text-xs text-gray-600">
+                  <div className="mt-3 text-xs text-gray-400 dark:text-gray-600">
                     {format(new Date(note.createdAt), 'MMM d, yyyy · h:mm a')}
                   </div>
                 </div>
@@ -303,9 +303,9 @@ export default function Dashboard() {
       {showNoteModal && (
         <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setShowNoteModal(false)}>
           <div className="modal-content max-w-md animate-slide-up">
-            <div className="p-6 border-b border-gray-800 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white">New Note</h2>
-              <button onClick={() => setShowNoteModal(false)} className="text-gray-500 hover:text-gray-300">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">New Note</h2>
+              <button onClick={() => setShowNoteModal(false)} className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -329,8 +329,8 @@ export default function Dashboard() {
       {/* Undo Toast */}
       {undoState && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-slide-up">
-          <div className="glass rounded-xl px-5 py-3 flex items-center gap-4 shadow-2xl border border-gray-700">
-            <span className="text-sm text-gray-300">Habit toggled</span>
+          <div className="glass rounded-xl px-5 py-3 flex items-center gap-4 shadow-2xl border border-gray-200 dark:border-gray-700">
+            <span className="text-sm text-gray-700 dark:text-gray-300">Habit toggled</span>
             <button onClick={handleUndo} className="text-brand-400 font-semibold text-sm hover:text-brand-300">
               Undo
             </button>

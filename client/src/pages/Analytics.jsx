@@ -40,9 +40,9 @@ const StatCard = ({ icon, label, value, sub, color }) => (
   <div className="card flex items-center gap-4">
     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl ${color}`}>{icon}</div>
     <div>
-      <div className="text-2xl font-bold text-white">{value}</div>
-      <div className="text-sm text-gray-400">{label}</div>
-      {sub && <div className="text-xs text-gray-600 mt-0.5">{sub}</div>}
+      <div className="text-2xl font-bold text-gray-900 dark:text-white">{value}</div>
+      <div className="text-sm text-gray-500 dark:text-gray-400">{label}</div>
+      {sub && <div className="text-xs text-gray-400 dark:text-gray-600 mt-0.5">{sub}</div>}
     </div>
   </div>
 );
@@ -50,8 +50,8 @@ const StatCard = ({ icon, label, value, sub, color }) => (
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload) return null;
   return (
-    <div className="bg-gray-900 border border-gray-700 rounded-xl p-3 shadow-xl">
-      <div className="text-sm font-medium text-white mb-1">{label}</div>
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-3 shadow-xl">
+      <div className="text-sm font-medium text-gray-900 dark:text-white mb-1">{label}</div>
       {payload.map((p) => (
         <div key={p.name} className="text-sm" style={{ color: p.color }}>
           {p.name}: <strong>{p.value}</strong>
@@ -100,19 +100,19 @@ export default function Analytics() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <Loader2 className="w-10 h-10 animate-spin text-brand-500" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <Navbar />
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-white">Analytics</h1>
-          <p className="text-gray-400 mt-1">Your habit performance at a glance</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Analytics</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">Your habit performance at a glance</p>
         </div>
 
         {/* Summary Stats */}
@@ -127,9 +127,9 @@ export default function Analytics() {
 
         {/* Heatmap */}
         <div className="card">
-          <h2 className="text-lg font-bold text-white mb-4">Year Activity Heatmap</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Year Activity Heatmap</h2>
           <HeatmapGrid data={heatmap} />
-          <div className="flex items-center gap-2 mt-4 text-xs text-gray-500">
+          <div className="flex items-center gap-2 mt-4 text-xs text-gray-500 dark:text-gray-500">
             <span>Less</span>
             {[0.1, 0.3, 0.5, 0.7, 0.9].map((o) => (
               <div key={o} className="w-3 h-3 rounded-sm" style={{ backgroundColor: `rgba(99, 102, 241, ${o})` }} />
@@ -142,10 +142,10 @@ export default function Analytics() {
         {monthly && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="card">
-              <h2 className="text-lg font-bold text-white mb-4">6-Month Trend</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">6-Month Trend</h2>
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={monthly.months}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-gray-800" />
                   <XAxis dataKey="label" tick={{ fill: '#6b7280', fontSize: 12 }} />
                   <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} />
                   <Tooltip content={<CustomTooltip />} />
@@ -156,7 +156,7 @@ export default function Analytics() {
 
             {/* Donut Chart */}
             <div className="card">
-              <h2 className="text-lg font-bold text-white mb-4">Category Breakdown</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Category Breakdown</h2>
               {monthly.categoryBreakdown.length > 0 ? (
                 <ResponsiveContainer width="100%" height={220}>
                   <PieChart>
@@ -178,7 +178,7 @@ export default function Analytics() {
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="text-center py-12 text-gray-600">No data yet this month</div>
+                <div className="text-center py-12 text-gray-500 dark:text-gray-600">No data yet this month</div>
               )}
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function Analytics() {
         {/* Per-Habit Trend */}
         <div className="card">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-white">Habit Trend (6 months)</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Habit Trend (6 months)</h2>
             <select
               className="input-field w-auto text-sm py-1.5"
               value={selectedHabit}
@@ -205,15 +205,15 @@ export default function Analytics() {
                   { label: 'Longest Streak', value: `🏆 ${habitTrend.longestStreak}d` },
                   { label: 'Total Completions', value: `✅ ${habitTrend.totalCompletions}` },
                 ].map((stat) => (
-                  <div key={stat.label} className="glass rounded-xl px-4 py-2">
-                    <div className="text-sm font-semibold text-white">{stat.value}</div>
+                  <div key={stat.label} className="glass rounded-xl px-4 py-2 border border-gray-200 dark:border-gray-800">
+                    <div className="text-sm font-semibold text-gray-900 dark:text-white">{stat.value}</div>
                     <div className="text-xs text-gray-500">{stat.label}</div>
                   </div>
                 ))}
               </div>
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={habitTrend.monthlyTrend}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-gray-800" />
                   <XAxis dataKey="label" tick={{ fill: '#6b7280', fontSize: 12 }} />
                   <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} />
                   <Tooltip content={<CustomTooltip />} />
@@ -235,7 +235,7 @@ export default function Analytics() {
         {/* Per-Habit Stats Cards */}
         {habits.length > 0 && (
           <div>
-            <h2 className="text-lg font-bold text-white mb-4">Habit Details</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Habit Details</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {habits.map((habit) => {
                 const monthCompletions = habit.completedDates?.filter(
@@ -246,23 +246,23 @@ export default function Analytics() {
                   <div key={habit._id} className="card hover:border-gray-700 transition-colors">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: habit.color }} />
-                      <span className="font-semibold text-white text-sm">{habit.name}</span>
+                      <span className="font-semibold text-gray-900 dark:text-white text-sm">{habit.name}</span>
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="glass rounded-lg p-2 text-center">
-                        <div className="font-bold text-white">{rate}%</div>
+                      <div className="glass rounded-lg p-2 text-center border border-gray-100 dark:border-gray-800">
+                        <div className="font-bold text-gray-900 dark:text-white">{rate}%</div>
                         <div className="text-xs text-gray-500">This Month</div>
                       </div>
-                      <div className="glass rounded-lg p-2 text-center">
+                      <div className="glass rounded-lg p-2 text-center border border-gray-100 dark:border-gray-800">
                         <div className="font-bold text-orange-400">🔥 {habit.currentStreak}</div>
                         <div className="text-xs text-gray-500">Current</div>
                       </div>
-                      <div className="glass rounded-lg p-2 text-center">
+                      <div className="glass rounded-lg p-2 text-center border border-gray-100 dark:border-gray-800">
                         <div className="font-bold text-yellow-400">🏆 {habit.longestStreak}</div>
                         <div className="text-xs text-gray-500">Best Ever</div>
                       </div>
-                      <div className="glass rounded-lg p-2 text-center">
-                        <div className="font-bold text-brand-400">{habit.completedDates?.length || 0}</div>
+                      <div className="glass rounded-lg p-2 text-center border border-gray-100 dark:border-gray-800">
+                        <div className="font-bold text-brand-500 dark:text-brand-400">{habit.completedDates?.length || 0}</div>
                         <div className="text-xs text-gray-500">All Time</div>
                       </div>
                     </div>
@@ -271,7 +271,7 @@ export default function Analytics() {
                         <span>Monthly Goal</span>
                         <span>{monthCompletions}/{habit.goal}</span>
                       </div>
-                      <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{ width: `${Math.min(rate, 100)}%`, backgroundColor: habit.color }}

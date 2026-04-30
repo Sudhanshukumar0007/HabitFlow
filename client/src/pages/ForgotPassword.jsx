@@ -24,32 +24,32 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center p-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-8">
       <div className="w-full max-w-md animate-fade-in">
         <div className="flex items-center gap-2 mb-8">
           <div className="w-10 h-10 bg-gradient-to-br from-brand-500 to-purple-500 rounded-xl flex items-center justify-center">
             <Waves className="w-5 h-5 text-white" />
           </div>
-          <span className="text-2xl font-bold text-white">HabitFlow</span>
+          <span className="text-2xl font-bold text-gray-900 dark:text-white">HabitFlow</span>
         </div>
 
         {sent ? (
           <div className="text-center">
             <div className="text-5xl mb-4">📬</div>
-            <h2 className="text-2xl font-bold text-white mb-2">Check your email</h2>
-            <p className="text-gray-400 mb-6">We've sent a password reset link to <strong className="text-white">{email}</strong></p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Check your email</h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">We've sent a password reset link to <strong className="text-gray-900 dark:text-white">{email}</strong></p>
             <Link to="/login" className="btn-primary inline-flex items-center gap-2">
               <ArrowLeft className="w-4 h-4" /> Back to login
             </Link>
           </div>
         ) : (
           <>
-            <h1 className="text-3xl font-bold text-white mb-2">Reset password</h1>
-            <p className="text-gray-400 mb-8">Enter your email and we'll send you a reset link</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Reset password</h1>
+            <p className="text-gray-500 dark:text-gray-400 mb-8">Enter your email and we'll send you a reset link</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">Email</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email</label>
                 <input
                   type="email"
                   className="input-field"

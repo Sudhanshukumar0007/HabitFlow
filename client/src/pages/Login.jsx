@@ -28,9 +28,9 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex">
       {/* Left panel */}
-      <div className="hidden lg:flex flex-col justify-center items-center w-1/2 bg-gradient-to-br from-brand-900 via-purple-950 to-gray-950 p-12 relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-center items-center w-1/2 bg-gradient-to-br from-brand-100 via-purple-100 to-gray-100 dark:from-brand-900 dark:via-purple-950 dark:to-gray-950 p-12 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-20 left-20 w-64 h-64 bg-brand-500 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-20 w-48 h-48 bg-purple-500 rounded-full blur-3xl" />
@@ -40,10 +40,10 @@ export default function Login() {
             <div className="w-14 h-14 bg-gradient-to-br from-brand-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
               <Waves className="w-8 h-8 text-white" />
             </div>
-            <span className="text-4xl font-bold text-white">HabitFlow</span>
+            <span className="text-4xl font-bold text-gray-900 dark:text-white">HabitFlow</span>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-4">Build Better Habits</h2>
-          <p className="text-gray-300 text-lg max-w-md">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Build Better Habits</h2>
+          <p className="text-gray-600 dark:text-gray-300 text-lg max-w-md">
             Track your daily habits, maintain streaks, earn XP, and unlock achievements. Your journey to a better you starts here.
           </p>
           <div className="mt-12 grid grid-cols-3 gap-6 text-center">
@@ -54,8 +54,8 @@ export default function Login() {
             ].map((item) => (
               <div key={item.label} className="glass rounded-2xl p-4">
                 <div className="text-2xl mb-1">{item.emoji}</div>
-                <div className="text-white font-semibold text-sm">{item.value}</div>
-                <div className="text-gray-400 text-xs">{item.label}</div>
+                <div className="text-gray-900 dark:text-white font-semibold text-sm">{item.value}</div>
+                <div className="text-gray-500 dark:text-gray-400 text-xs">{item.label}</div>
               </div>
             ))}
           </div>
@@ -69,15 +69,15 @@ export default function Login() {
             <div className="w-10 h-10 bg-gradient-to-br from-brand-500 to-purple-500 rounded-xl flex items-center justify-center">
               <Waves className="w-5 h-5 text-white" />
             </div>
-            <span className="text-2xl font-bold text-white">HabitFlow</span>
+            <span className="text-2xl font-bold text-gray-900 dark:text-white">HabitFlow</span>
           </div>
 
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
-          <p className="text-gray-400 mb-8">Sign in to continue your habit journey</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Welcome back</h1>
+          <p className="text-gray-500 dark:text-gray-400 mb-8">Sign in to continue your habit journey</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">Email</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email</label>
               <input
                 type="email"
                 className="input-field"
@@ -88,7 +88,7 @@ export default function Login() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Password</label>
               <div className="relative">
                 <input
                   type={showPw ? 'text' : 'password'}
@@ -101,7 +101,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPw(!showPw)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
                 >
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -122,16 +122,16 @@ export default function Login() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-800" />
+              <div className="w-full border-t border-gray-300 dark:border-gray-800" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-950 text-gray-500">or continue with</span>
+              <span className="px-2 bg-gray-50 dark:bg-gray-950 text-gray-500">or continue with</span>
             </div>
           </div>
 
           <a
             href={`${import.meta.env.VITE_API_URL || '/api'}/auth/google`}
-            className="w-full flex items-center justify-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200"
+            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 dark:bg-white/5 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 text-gray-700 dark:text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 shadow-sm dark:shadow-none"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>

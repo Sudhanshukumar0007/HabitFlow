@@ -15,7 +15,7 @@
   }
 
   body {
-    @apply bg-gray-950 text-gray-100 antialiased;
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 antialiased;
     min-height: 100vh;
   }
 
@@ -24,23 +24,23 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-gray-900;
+    @apply bg-gray-100 dark:bg-gray-900;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-700 rounded-full;
+    @apply bg-gray-300 dark:bg-gray-700 rounded-full;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-600;
+    @apply bg-gray-400 dark:bg-gray-600;
   }
 }
 
 @layer components {
   .glass {
-    @apply bg-white/5 backdrop-blur-sm border border-white/10;
+    @apply bg-white/60 dark:bg-white/5 backdrop-blur-sm border border-gray-200 dark:border-white/10;
   }
 
   .glass-hover {
-    @apply hover:bg-white/10 transition-colors duration-200;
+    @apply hover:bg-white/80 dark:hover:bg-white/10 transition-colors duration-200;
   }
 
   .btn-primary {
@@ -48,27 +48,27 @@
   }
 
   .btn-secondary {
-    @apply bg-white/10 hover:bg-white/20 text-white font-medium px-4 py-2 rounded-xl transition-all duration-200 active:scale-95 border border-white/10;
+    @apply bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20 text-gray-800 dark:text-white font-medium px-4 py-2 rounded-xl transition-all duration-200 active:scale-95 border border-gray-200 dark:border-white/10;
   }
 
   .btn-danger {
-    @apply bg-red-500/20 hover:bg-red-500/30 text-red-400 font-medium px-4 py-2 rounded-xl transition-all duration-200 border border-red-500/20;
+    @apply bg-red-50 hover:bg-red-100 dark:bg-red-500/20 dark:hover:bg-red-500/30 text-red-600 dark:text-red-400 font-medium px-4 py-2 rounded-xl transition-all duration-200 border border-red-200 dark:border-red-500/20;
   }
 
   .input-field {
-    @apply w-full bg-gray-900 border border-gray-700 text-gray-100 px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent placeholder-gray-500 transition-all duration-200;
+    @apply w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100 px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-200;
   }
 
   .card {
-    @apply bg-gray-900 border border-gray-800 rounded-2xl p-5;
+    @apply bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm dark:shadow-none;
   }
 
   .modal-overlay {
-    @apply fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4;
+    @apply fixed inset-0 bg-gray-900/40 dark:bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4;
   }
 
   .modal-content {
-    @apply bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto;
+    @apply bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto;
   }
 
   .tag {
@@ -80,7 +80,7 @@
   }
 
   .habit-cell {
-    @apply w-8 h-8 rounded-lg border border-gray-800 flex items-center justify-center cursor-pointer transition-all duration-150 hover:scale-110 active:scale-95 flex-shrink-0;
+    @apply w-8 h-8 rounded-lg border border-gray-200 dark:border-gray-800 flex items-center justify-center cursor-pointer transition-all duration-150 hover:scale-110 active:scale-95 flex-shrink-0;
   }
 
   .habit-cell-done {
@@ -88,19 +88,19 @@
   }
 
   .habit-cell-missed {
-    @apply bg-red-950/50 border-red-900/30;
+    @apply bg-red-100 border-red-200 dark:bg-red-950/50 dark:border-red-900/30;
   }
 
   .habit-cell-future {
-    @apply bg-transparent border-gray-800/50 cursor-not-allowed opacity-40;
+    @apply bg-transparent border-gray-200 dark:border-gray-800/50 cursor-not-allowed opacity-40;
   }
 
   .habit-cell-off-day {
-    @apply bg-gray-900/20 border-gray-800/20 cursor-not-allowed opacity-25;
+    @apply bg-gray-100 border-gray-200 dark:bg-gray-900/20 dark:border-gray-800/20 cursor-not-allowed opacity-25;
   }
 
   .xp-bar {
-    @apply h-1.5 bg-gray-800 rounded-full overflow-hidden;
+    @apply h-1.5 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden;
   }
 
   .xp-bar-fill {
