@@ -266,4 +266,6 @@ Built with ❤️ using the MERN stack
 
 ⭐ **Star this repo if you found it helpful!**
 
+Built by Sudhanshu Kumar — 2nd year CS student building AI systems.
+Part of the larger Aira project — a modular AI OS connecting multiple specialized agents.
 </div>
