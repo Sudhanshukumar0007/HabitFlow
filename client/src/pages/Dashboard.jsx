@@ -63,6 +63,11 @@ export default function Dashboard() {
   });
 
   const handleToggle = useCallback(async (habitId, date) => {
+    if (!isToday(date)) {
+      toast.error('You can only update habits for today');
+      return;
+    }
+
     const habit = habits.find((h) => h._id === habitId);
     if (!habit) return;
     const wasCompleted = isHabitCompletedOnDate(habit, date);
@@ -105,7 +110,7 @@ export default function Dashboard() {
         setTimeout(() => setConfetti(false), 5000);
         toast.success('🎊 All habits done for today! Amazing!', { duration: 5000 });
       }
-    } catch {
+    } catch (error) {
       // Revert on error
       setHabits((prev) =>
         prev.map((h) => {
@@ -117,7 +122,7 @@ export default function Dashboard() {
           return { ...h, completedDates: revertDates };
         })
       );
-      toast.error('Failed to update habit');
+      toast.error(error.response?.data?.message || 'Failed to update habit');
     }
   }, [habits, undoTimer]);
 

@@ -1,5 +1,4 @@
-import { useState, useCallback } from 'react';
-import { format, isToday, isPast, isFuture, getDay } from 'date-fns';
+import { format, isToday, isPast, isFuture } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { GripVertical, Flame, Archive, Edit2, Trash2 } from 'lucide-react';
 import { getDaysInMonth, isHabitCompletedOnDate, isScheduledDay, getMonthCompletions, CATEGORY_COLORS } from '../utils/dateUtils';
@@ -13,6 +12,7 @@ const HabitCell = ({ habit, day, onToggle, isCurrentMonth }) => {
   const past = isPast(day) && !isToday(day);
   const future = isFuture(day) && !isToday(day);
   const todayCell = isToday(day);
+  const canToggle = todayCell;
 
   if (!scheduled) {
     return <div className="habit-cell habit-cell-off-day w-8 h-8 rounded-lg flex-shrink-0" />;
@@ -22,26 +22,49 @@ const HabitCell = ({ habit, day, onToggle, isCurrentMonth }) => {
     return <div className="habit-cell habit-cell-future flex-shrink-0" />;
   }
 
+  const cellClasses = clsx(
+    'habit-cell flex-shrink-0',
+    done
+      ? 'habit-cell-done'
+      : past
+      ? 'habit-cell-missed'
+      : 'bg-gray-900',
+    canToggle ? 'hover:border-gray-600 cursor-pointer' : 'cursor-not-allowed',
+    todayCell && !done && 'border-gray-600 bg-gray-800/50'
+  );
+  const cellStyle = done ? { backgroundColor: habit.color + '40', borderColor: habit.color + '80' } : {};
+  const cellTitle = canToggle
+    ? format(day, 'MMM d, yyyy')
+    : `${format(day, 'MMM d, yyyy')} - only today can be changed`;
+  const checkmark = done && (
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" style={{ color: habit.color }}>
+      <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+
+  if (!canToggle) {
+    return (
+      <div
+        className={cellClasses}
+        style={cellStyle}
+        title={cellTitle}
+        aria-disabled="true"
+      >
+        {checkmark}
+      </div>
+    );
+  }
+
   return (
     <button
+      type="button"
       onClick={() => onToggle(habit._id, day)}
-      className={clsx(
-        'habit-cell flex-shrink-0',
-        done
-          ? 'habit-cell-done'
-          : past
-          ? 'habit-cell-missed'
-          : 'bg-gray-900 hover:border-gray-600',
-        todayCell && !done && 'border-gray-600 bg-gray-800/50'
-      )}
-      style={done ? { backgroundColor: habit.color + '40', borderColor: habit.color + '80' } : {}}
-      title={format(day, 'MMM d, yyyy')}
+      className={cellClasses}
+      style={cellStyle}
+      title={cellTitle}
+      aria-label={`Toggle ${habit.name} for today`}
     >
-      {done && (
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" style={{ color: habit.color }}>
-          <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      )}
+      {checkmark}
     </button>
   );
 };

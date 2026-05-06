@@ -101,6 +101,10 @@ const toggleHabit = async (req, res, next) => {
       return res.status(400).json({ message: 'Invalid date' });
     }
 
+    if (!isSameDay(targetDate, new Date())) {
+      return res.status(400).json({ message: 'Habits can only be updated for today' });
+    }
+
     // Normalize to midnight UTC
     const targetDay = format(targetDate, 'yyyy-MM-dd');
 
