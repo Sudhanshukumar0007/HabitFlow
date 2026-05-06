@@ -91,7 +91,7 @@ export default function Dashboard() {
     setUndoTimer(timer);
 
     try {
-      const result = await habitApi.toggle(habitId, date.toISOString());
+      const result = await habitApi.toggle(habitId, format(date, 'yyyy-MM-dd'));
       // Update with server state
       setHabits((prev) => prev.map((h) => (h._id === habitId ? { ...h, ...result.habit } : h)));
       if (result.xpResult) updateUser({ xp: result.xpResult.xp, level: result.xpResult.level });

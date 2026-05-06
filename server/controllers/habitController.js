@@ -7,7 +7,6 @@ const {
   startOfMonth,
   endOfMonth,
   parseISO,
-  isSameDay,
   isValid,
 } = require('date-fns');
 
@@ -95,18 +94,18 @@ const toggleHabit = async (req, res, next) => {
     if (!habit) return res.status(404).json({ message: 'Habit not found' });
 
     const { date } = req.body;
-    const targetDate = date ? new Date(date) : new Date();
+    const targetDate = date ? parseISO(date) : new Date();
 
     if (!isValid(targetDate)) {
       return res.status(400).json({ message: 'Invalid date' });
     }
 
-    if (!isSameDay(targetDate, new Date())) {
+    const targetDay = format(targetDate, 'yyyy-MM-dd');
+    const today = format(new Date(), 'yyyy-MM-dd');
+
+    if (targetDay !== today) {
       return res.status(400).json({ message: 'Habits can only be updated for today' });
     }
-
-    // Normalize to midnight UTC
-    const targetDay = format(targetDate, 'yyyy-MM-dd');
 
     const alreadyDone = habit.completedDates.some((d) => format(new Date(d), 'yyyy-MM-dd') === targetDay);
 
@@ -127,7 +126,6 @@ const toggleHabit = async (req, res, next) => {
 
       // Check if all habits done today
       const allHabits = await Habit.find({ userId: req.user._id, isDeleted: false, isArchived: false });
-      const today = format(new Date(), 'yyyy-MM-dd');
       const allDoneToday = allHabits.every((h) =>
         h.completedDates.some((d) => format(new Date(d), 'yyyy-MM-dd') === today)
       );
