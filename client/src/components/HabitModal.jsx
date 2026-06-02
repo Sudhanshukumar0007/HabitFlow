@@ -16,7 +16,7 @@ const DEFAULT_FORM = {
   color: '#6366f1',
   frequency: 'daily',
   weekDays: [],
-  goal: 30,
+  goal: 1,
   reminderTime: '',
   reminderType: 'none',
 };
@@ -168,15 +168,15 @@ export default function HabitModal({ open, onClose, onCreated, onUpdated, editHa
           {/* Goal */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1.5">
-              Monthly Goal <span className="text-gray-500 font-normal">(completions)</span>
+              Daily Goal <span className="text-gray-500 font-normal">(completions per day)</span>
             </label>
             <input
               type="number"
               className="input-field"
               min="1"
-              max="31"
+              max="100"
               value={form.goal}
-              onChange={(e) => setForm({ ...form, goal: parseInt(e.target.value) || 30 })}
+              onChange={(e) => setForm({ ...form, goal: parseInt(e.target.value) || 1 })}
             />
           </div>
 

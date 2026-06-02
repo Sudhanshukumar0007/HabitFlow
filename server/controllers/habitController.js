@@ -103,22 +103,20 @@ const toggleHabit = async (req, res, next) => {
     const targetDay = format(targetDate, 'yyyy-MM-dd');
     const today = format(new Date(), 'yyyy-MM-dd');
 
-    if (targetDay !== today) {
-      return res.status(400).json({ message: 'Habits can only be updated for today' });
-    }
-
-    const alreadyDone = habit.completedDates.some((d) => format(new Date(d), 'yyyy-MM-dd') === targetDay);
+    const dayCompletions = habit.completedDates.filter((d) => format(new Date(d), 'yyyy-MM-dd') === targetDay);
+    const count = dayCompletions.length;
+    const goal = habit.goal || 1;
 
     let xpResult = null;
     let newBadges = [];
 
-    if (alreadyDone) {
+    if (count >= goal) {
       // Uncheck
       habit.completedDates = habit.completedDates.filter(
         (d) => format(new Date(d), 'yyyy-MM-dd') !== targetDay
       );
     } else {
-      // Check
+      // Check (increment)
       habit.completedDates.push(targetDate);
 
       // Award XP
@@ -126,16 +124,18 @@ const toggleHabit = async (req, res, next) => {
 
       // Check if all habits done today
       const allHabits = await Habit.find({ userId: req.user._id, isDeleted: false, isArchived: false });
-      const allDoneToday = allHabits.every((h) =>
-        h.completedDates.some((d) => format(new Date(d), 'yyyy-MM-dd') === today)
-      );
+      const allDoneToday = allHabits.every((h) => {
+        const hGoal = h.goal || 1;
+        const hCount = h.completedDates.filter((d) => format(new Date(d), 'yyyy-MM-dd') === today).length;
+        return hCount >= hGoal;
+      });
       if (allDoneToday) {
         xpResult = await addXP(req.user._id, XP_RULES.ALL_DONE_BONUS, 'All habits completed today!');
       }
     }
 
     // Recompute streaks
-    const streaks = computeStreaks(habit.completedDates);
+    const streaks = computeStreaks(habit.completedDates, goal);
     habit.currentStreak = streaks.currentStreak;
     habit.longestStreak = Math.max(habit.longestStreak, streaks.longestStreak);
 
@@ -150,7 +150,7 @@ const toggleHabit = async (req, res, next) => {
     const habits = await Habit.find({ userId: req.user._id, isDeleted: false });
     newBadges = await checkAndAwardBadges(req.user._id, habits);
 
-    res.json({ habit, xpResult, newBadges, completed: !alreadyDone });
+    res.json({ habit, xpResult, newBadges, completed: count + 1 >= goal });
   } catch (error) {
     next(error);
   }

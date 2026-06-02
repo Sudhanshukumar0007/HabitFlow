@@ -4,8 +4,14 @@ export const getDaysInMonth = (date) => {
   return eachDayOfInterval({ start: startOfMonth(date), end: endOfMonth(date) });
 };
 
-export const isHabitCompletedOnDate = (habit, date) => {
-  return habit.completedDates?.some((d) => isSameDay(new Date(d), date)) || false;
+export const getHabitCompletionsOnDate = (habit, date) => {
+  return habit.completedDates?.filter((d) => isSameDay(new Date(d), date)).length || 0;
+};
+
+export const isHabitFullyCompletedOnDate = (habit, date) => {
+  const count = getHabitCompletionsOnDate(habit, date);
+  const goal = habit.goal || 1;
+  return count >= goal;
 };
 
 export const isScheduledDay = (habit, date) => {

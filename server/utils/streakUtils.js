@@ -4,19 +4,24 @@ const { format, startOfDay, endOfDay, subDays, isSameDay, parseISO, isValid } = 
  * Compute currentStreak and longestStreak from an array of completed dates.
  * Dates are normalized to midnight UTC for comparison.
  */
-const computeStreaks = (completedDates) => {
+const computeStreaks = (completedDates, goal = 1) => {
   if (!completedDates || completedDates.length === 0) {
     return { currentStreak: 0, longestStreak: 0 };
   }
 
-  // Normalize: get unique day strings sorted descending
-  const dayStrings = [
-    ...new Set(
-      completedDates
-        .filter((d) => d && isValid(new Date(d)))
-        .map((d) => format(new Date(d), 'yyyy-MM-dd'))
-    ),
-  ].sort().reverse();
+  // Count completions per day
+  const dayCounts = {};
+  completedDates
+    .filter((d) => d && isValid(new Date(d)))
+    .forEach((d) => {
+      const dayStr = format(new Date(d), 'yyyy-MM-dd');
+      dayCounts[dayStr] = (dayCounts[dayStr] || 0) + 1;
+    });
+
+  // Keep only days meeting the goal
+  const dayStrings = Object.keys(dayCounts)
+    .filter(dayStr => dayCounts[dayStr] >= goal)
+    .sort().reverse();
 
   if (dayStrings.length === 0) return { currentStreak: 0, longestStreak: 0 };
 

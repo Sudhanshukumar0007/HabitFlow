@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import toast from 'react-hot-toast';
 import { habitApi, noteApi } from '../api/habitApi';
 import { useAuth } from '../context/AuthContext';
-import { isHabitCompletedOnDate, CATEGORY_COLORS } from '../utils/dateUtils';
+import { getHabitCompletionsOnDate, isHabitFullyCompletedOnDate, CATEGORY_COLORS } from '../utils/dateUtils';
 import HabitGrid from '../components/HabitGrid';
 import HabitModal from '../components/HabitModal';
 import Navbar from '../components/Navbar';
@@ -63,23 +63,25 @@ export default function Dashboard() {
   });
 
   const handleToggle = useCallback(async (habitId, date) => {
-    if (!isToday(date)) {
-      toast.error('You can only update habits for today');
-      return;
-    }
-
     const habit = habits.find((h) => h._id === habitId);
     if (!habit) return;
-    const wasCompleted = isHabitCompletedOnDate(habit, date);
+    const completions = getHabitCompletionsOnDate(habit, date);
+    const wasCompleted = isHabitFullyCompletedOnDate(habit, date);
+    const goal = habit.goal || 1;
 
     // Optimistic update
     setHabits((prev) =>
       prev.map((h) => {
         if (h._id !== habitId) return h;
         const dateStr = format(date, 'yyyy-MM-dd');
-        const newDates = wasCompleted
-          ? h.completedDates.filter((d) => format(new Date(d), 'yyyy-MM-dd') !== dateStr)
-          : [...h.completedDates, date.toISOString()];
+        let newDates;
+        if (completions >= goal) {
+          // Uncheck all for this date
+          newDates = h.completedDates.filter((d) => format(new Date(d), 'yyyy-MM-dd') !== dateStr);
+        } else {
+          // Increment
+          newDates = [...h.completedDates, date.toISOString()];
+        }
         return { ...h, completedDates: newDates };
       })
     );
@@ -104,7 +106,7 @@ export default function Dashboard() {
 
       // Check all done today
       const updatedHabits = habits.map((h) => (h._id === habitId ? result.habit : h));
-      const allDoneToday = updatedHabits.every((h) => isHabitCompletedOnDate(h, new Date()));
+      const allDoneToday = updatedHabits.every((h) => isHabitFullyCompletedOnDate(h, new Date()));
       if (allDoneToday && !wasCompleted) {
         setConfetti(true);
         setTimeout(() => setConfetti(false), 5000);
@@ -116,9 +118,12 @@ export default function Dashboard() {
         prev.map((h) => {
           if (h._id !== habitId) return h;
           const dateStr = format(date, 'yyyy-MM-dd');
-          const revertDates = !wasCompleted
-            ? h.completedDates.filter((d) => format(new Date(d), 'yyyy-MM-dd') !== dateStr)
-            : [...h.completedDates, date.toISOString()];
+          let revertDates;
+          if (completions >= goal) {
+             revertDates = [...h.completedDates, ...Array.from({length: completions}).map(() => date.toISOString())]; // Roughly revert to old count
+          } else {
+             revertDates = h.completedDates.filter((d, i) => i !== h.completedDates.length - 1); // remove last inserted
+          }
           return { ...h, completedDates: revertDates };
         })
       );
@@ -135,7 +140,7 @@ export default function Dashboard() {
 
   const completeAllToday = async () => {
     const today = new Date();
-    const incomplete = habits.filter((h) => !isHabitCompletedOnDate(h, today) && !h.isArchived);
+    const incomplete = habits.filter((h) => !isHabitFullyCompletedOnDate(h, today) && !h.isArchived);
     if (incomplete.length === 0) {
       toast('All habits already done! 🎉');
       return;

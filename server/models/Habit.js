@@ -11,7 +11,7 @@ const habitSchema = new mongoose.Schema({
   color: { type: String, default: '#6366f1' },
   frequency: { type: String, enum: ['daily', 'weekly'], default: 'daily' },
   weekDays: [{ type: Number }], // 0=Sun ... 6=Sat
-  goal: { type: Number, default: 30 },
+  goal: { type: Number, default: 1 },
   reminderTime: { type: String, default: '' },
   reminderType: { type: String, enum: ['browser', 'email', 'both', 'none'], default: 'none' },
   completedDates: [{ type: Date }],

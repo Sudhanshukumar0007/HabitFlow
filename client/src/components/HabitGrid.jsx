@@ -1,18 +1,19 @@
 import { format, isToday, isPast, isFuture } from 'date-fns';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { GripVertical, Flame, Archive, Edit2, Trash2 } from 'lucide-react';
-import { getDaysInMonth, isHabitCompletedOnDate, isScheduledDay, getMonthCompletions, CATEGORY_COLORS } from '../utils/dateUtils';
+import { getDaysInMonth, getHabitCompletionsOnDate, isHabitFullyCompletedOnDate, isScheduledDay, getMonthCompletions, CATEGORY_COLORS } from '../utils/dateUtils';
 import { habitApi } from '../api/habitApi';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 
 const HabitCell = ({ habit, day, onToggle, isCurrentMonth }) => {
-  const done = isHabitCompletedOnDate(habit, day);
+  const completions = getHabitCompletionsOnDate(habit, day);
+  const done = isHabitFullyCompletedOnDate(habit, day);
   const scheduled = isScheduledDay(habit, day);
   const past = isPast(day) && !isToday(day);
   const future = isFuture(day) && !isToday(day);
   const todayCell = isToday(day);
-  const canToggle = todayCell;
+  const canToggle = !future; // allow toggling today and past days
 
   if (!scheduled) {
     return <div className="habit-cell habit-cell-off-day w-8 h-8 rounded-lg flex-shrink-0" />;
@@ -32,15 +33,21 @@ const HabitCell = ({ habit, day, onToggle, isCurrentMonth }) => {
     canToggle ? 'hover:border-gray-600 cursor-pointer' : 'cursor-not-allowed',
     todayCell && !done && 'border-gray-600 bg-gray-800/50'
   );
-  const cellStyle = done ? { backgroundColor: habit.color + '40', borderColor: habit.color + '80' } : {};
+  
+  const progressRatio = habit.goal > 1 ? Math.min(completions / habit.goal, 1) : done ? 1 : 0;
+  const cellStyle = progressRatio > 0 
+    ? { backgroundColor: habit.color + Math.floor(progressRatio * 64).toString(16).padStart(2, '0'), borderColor: habit.color + '80' } 
+    : {};
   const cellTitle = canToggle
-    ? format(day, 'MMM d, yyyy')
-    : `${format(day, 'MMM d, yyyy')} - only today can be changed`;
-  const checkmark = done && (
+    ? `${format(day, 'MMM d, yyyy')} - ${completions}/${habit.goal || 1}`
+    : `${format(day, 'MMM d, yyyy')} - only past and today can be changed`;
+  const checkmark = done ? (
     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" style={{ color: habit.color }}>
       <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
-  );
+  ) : completions > 0 ? (
+    <span className="text-[10px] font-bold" style={{ color: habit.color }}>{completions}</span>
+  ) : null;
 
   if (!canToggle) {
     return (
@@ -107,7 +114,7 @@ export default function HabitGrid({ habits, currentMonth, onHabitsReorder, onTog
               <span className="text-gray-600 text-[10px]">{format(day, 'EEEEE')}</span>
             </div>
           ))}
-          <div className="w-32 flex-shrink-0 pl-3 text-xs text-gray-600 font-medium self-end pb-1">STREAK / GOAL</div>
+          <div className="w-32 flex-shrink-0 pl-3 text-xs text-gray-600 font-medium self-end pb-1">STREAK / TODAY</div>
         </div>
 
         {/* Habit Rows */}
@@ -116,7 +123,8 @@ export default function HabitGrid({ habits, currentMonth, onHabitsReorder, onTog
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-1">
                 {habits.map((habit, index) => {
-                  const completions = getMonthCompletions(habit, currentMonth);
+                  const todayCompletions = getHabitCompletionsOnDate(habit, today);
+                  const goal = habit.goal || 1;
                   const catColors = CATEGORY_COLORS[habit.category] || CATEGORY_COLORS.Custom;
                   const isStreakHot = habit.currentStreak >= 7;
 
@@ -166,8 +174,8 @@ export default function HabitGrid({ habits, currentMonth, onHabitsReorder, onTog
                               <Flame className={clsx('w-3.5 h-3.5', isStreakHot && 'text-orange-400')} />
                               {habit.currentStreak}
                             </div>
-                            <div className={clsx('text-sm font-medium', completions >= habit.goal ? 'text-emerald-400' : completions === 0 ? 'text-yellow-600' : 'text-gray-400')}>
-                              {completions}/{habit.goal}
+                            <div className={clsx('text-sm font-medium', todayCompletions >= goal ? 'text-emerald-400' : todayCompletions === 0 ? 'text-yellow-600' : 'text-gray-400')}>
+                              {todayCompletions}/{goal}
                             </div>
 
                             {/* Actions */}

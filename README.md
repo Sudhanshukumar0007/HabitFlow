@@ -41,7 +41,7 @@ Your journey to a better you starts here.
 | 🌙 **UX Polish** | Dark mode, drag & drop reordering, 5-second undo toggle, keyboard shortcuts |
 | 🌐 **Social** | Public profile pages, CSV data export |
 
----
+
 
 ## 🛠️ Tech Stack
 
